@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bank Management System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+
+    .container {
+      max-width: 768px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+
+    .form-container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    label {
+      font-size: 16px;
+      color: #555;
+    }
+
+    input[type="text"], input[type="number"], select {
+      outline: none;
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 12px 20px;
+      background-color: #09f111;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 5px 10px;
+    }
+
+    button:hover {
+      background-color: #35cf3d;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .payment-section {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .action-btn {
+      background-color: #007BFF;
+      border: none;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .action-btn:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="mobile-form" class="form-container">
+      <h2>Bank Management System</h2>
+      <label for="mobile-number">Enter Mobile Number:</label>
+      <input type="number" id="mobile-number" placeholder="Enter mobile number" required>
+      <button onclick="validateMobile()">Submit</button>
+    </div>
+    <div id="success-message" class="hidden"></div>
+    <div id="payment-form" class="form-container hidden">
+      <h2>Select Payment Method</h2>
+      <label for="payment-method">Choose Payment Method:</label>
+      <select id="payment-method" required>
+        <option value="">--Select Payment Method--</option>
+        <option value="credit-card">Credit Card</option>
+        <option value="debit-card">Debit Card</option>
+        <option value="paypal">PayPal</option>
+        <option value="net-banking">Net Banking</option>
+      </select>
+      <button onclick="navigateToPaymentSection()">Next</button>
+    </div>
+    <div id="payment-section" class="form-container hidden">
+      <h2>Payment Section</h2>
+      <label for="payment-amount">Amount:</label>
+      <input type="number" id="payment-amount" placeholder="Enter amount" required>
+      <div class="payment-section">
+        <button class="action-btn" onclick="processPayment('add')">Add Payment</button>
+        <button class="action-btn" onclick="processPayment('receive')">Receive Payment</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    function validateMobile() {
+      const mobileNumber = document.getElementById("mobile-number").value;
+      if (mobileNumber.length === 10) {
+        document.getElementById("success-message").classList.add("hidden");
+        document.getElementById("payment-form").classList.remove("hidden");
+        document.getElementById("mobile-form").classList.add("hidden");
+      } else {
+        alert("Please enter a valid 10-digit mobile number.");
+      }
+    }
+
+    function navigateToPaymentSection() {
+      const paymentMethod = document.getElementById("payment-method").value;
+      if (paymentMethod === "") {
+        alert("Please select a payment method.");
+        return;
+      }
+      document.getElementById("payment-form").classList.add("hidden");
+      document.getElementById("payment-section").classList.remove("hidden");
+    }
+
+    function processPayment(action) {
+      const amount = document.getElementById("payment-amount").value;
+      const paymentMethod = document.getElementById("payment-method").value;
+
+      if (!amount || amount <= 0) {
+        alert("Please enter a valid amount.");
+        return;
+      }
+
+      if (!paymentMethod) {
+        alert("Please select a payment method.");
+        return;
+      }
+
+      const actionType = action === "add" ? "Added" : "Received";
+
+      document.getElementById("mobile-form").classList.add("hidden");
+      document.getElementById("payment-form").classList.add("hidden");
+      document.getElementById("payment-section").classList.add("hidden");
+
+      const container = document.querySelector(".container");
+      container.innerHTML = `
+        <div class="form-container">
+          <h2>Payment Successful!</h2>
+          <p style="font-size: 18px; color: #333;">
+            ${actionType} <strong>${amount}</strong> successfully using <strong>${paymentMethod}</strong>.
+          </p>
+          <button onclick="restartProcess()" style="padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 4px; cursor: pointer;">Return to Home</button>
+        </div>
+      `;
+    }
+
+    function restartProcess() {
+      location.reload();
+    }
+  </script>
+</body>
+</html>
